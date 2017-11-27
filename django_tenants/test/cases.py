@@ -35,15 +35,15 @@ class TenantTestCase(TestCase):
     def setUpClass(cls):
         cls.sync_shared()
         cls.add_allowed_test_domain()
-        cls.tenant = get_tenant_model()(schema_name=cls.get_test_schema_name())
+        cls.tenant, created_tenant = get_tenant_model().objects.get_or_create(schema_name=cls.get_test_schema_name())
         cls.setup_tenant(cls.tenant)
-        cls.tenant.save(verbosity=cls.get_verbosity())
+        # cls.tenant.save(verbosity=cls.get_verbosity())
 
         # Set up domain
         tenant_domain = cls.get_test_tenant_domain()
-        cls.domain = get_tenant_domain_model()(tenant=cls.tenant, domain=tenant_domain)
+        cls.domain, created_domain = get_tenant_domain_model().objects.get_or_create(tenant=cls.tenant, domain=tenant_domain)
         cls.setup_domain(cls.domain)
-        cls.domain.save()
+        # cls.domain.save()
 
         connection.set_tenant(cls.tenant)
         super(TenantTestCase, cls).setUpClass()
@@ -113,15 +113,15 @@ class FastTenantTestCase(TenantTestCase):
 
     @classmethod
     def setup_test_tenant_and_domain(cls):
-        cls.tenant = get_tenant_model()(schema_name=cls.get_test_schema_name())
+        cls.tenant, created_tenant = get_tenant_model().objects.get_or_create(schema_name=cls.get_test_schema_name())
         cls.setup_tenant(cls.tenant)
-        cls.tenant.save(verbosity=cls.get_verbosity())
+        # cls.tenant.save(verbosity=cls.get_verbosity())
 
         # Set up domain
         tenant_domain = cls.get_test_tenant_domain()
-        cls.domain = get_tenant_domain_model()(tenant=cls.tenant, domain=tenant_domain)
+        cls.domain, created_domain = get_tenant_domain_model().objects.get_or_create(tenant=cls.tenant, domain=tenant_domain)
         cls.setup_domain(cls.domain)
-        cls.domain.save()
+        # cls.domain.save()
         cls.use_new_tenant()
 
     @classmethod
